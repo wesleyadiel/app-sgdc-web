@@ -1,0 +1,19 @@
+.footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: #333;
+    height: 50px;
+    border-top: 3px transparent;
+    color: #fff;
+}
+
+.footer p{
+    position: flex;
+    text-align: center;
+    top: 20%;
+    left: 50%;
+    padding: 15px;
+}
