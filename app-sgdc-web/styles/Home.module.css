@@ -1,37 +1,35 @@
-.login_container{
-    height: 400px;
-    width: 400px;
-    border: 1px;
-    border-radius: 3%;
-    background-color: #f8f7f3;
-    align-items: center;
-    justify-content: center;
-    margin:auto;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;;
+.page{
+    display: flex;
 }
 
-.fundo{
-    background-image: url('../public/images/fundo-utfpr.png');
-    background-size:  cover;
-    width: auto;
-    height: 90vh;
-    padding-top: 40px;
+.container_pendencias{
+    border: 3px solid black;
+    border-radius: 5px;
+    height: 50vh;
+    width: 100%;
+    top:0;
+    margin-top:30px;
+    margin-left:30px;
+    margin-right:30px;
 }
 
-.titleLoginContainer{
-    text-align: center;
-    padding-top: 30px;
-    padding-bottom: 30px;
-}
-
-.tagEsqueciSenha {
-    padding-top: 10px;
+.container_title{
+    display: flex;
+    justify-content: space-between;
+    color: black;
+    margin-top: 20px;
+    margin-left: 20px;
+    padding-right: 40px;
     font-weight: bold;
-    color: #0a58ca;
-    transition: 0.5ms;
+    font-size: 24px;
+    width: 100%;
+    height: auto;
 }
 
-.tagEsqueciSenha:hover{
-    color:#0d6efd;
-    cursor: default;
+.container_lista_pendencias{
+    display: flex;
+    margin-top:20px;
+    margin-left: 20px;
+    margin-top: 20px;
+    width: 100%;
 }

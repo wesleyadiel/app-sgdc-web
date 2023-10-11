@@ -1,20 +1,25 @@
-import Link from 'next/link'
-import Image from 'next/image'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser, faUsers, faChalkboardUser,faGraduationCap, faFolderOpen, faBookOpen, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from 'next/router';
+
 import styles from '../../styles/Sidebar.module.css'
 
-export default function Sidebar() {
-    const usuario = { nome: "Wesley Adiel" }
+export default function Sidebar({user}) {
+    const router = useRouter();
+    
+    async  function  visualizarPagina(rota) {
+        router.push(rota);
+    }
+
     return (
         <div className={styles.sidebar_container}>
             <div className={styles.header_sidebar}>
                 <FontAwesomeIcon icon={faCircleUser} style={{ fontSize: '35px', color: "#ffffff" }} />
-                <a>{usuario.nome}</a>
+                <a>{user.nome?.slice(0, 12)}</a>
             </div>
             <nav className={styles.sidebar_nav}>
                 <ul>
-                    <li>
+                    <li onClick={() => visualizarPagina("/usuarios")}>
                         <FontAwesomeIcon icon={faUsers} style={{ fontSize: '24px' }} />
                         <a>Usuarios</a>
                     </li>

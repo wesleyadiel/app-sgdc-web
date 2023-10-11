@@ -1,0 +1,37 @@
+.login_container{
+    height: 400px;
+    width: 400px;
+    border: 1px;
+    border-radius: 3%;
+    background-color: #f8f7f3;
+    align-items: center;
+    justify-content: center;
+    margin:auto;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;;
+}
+
+.fundo{
+    background-image: url('../public/images/fundo-utfpr.png');
+    background-size:  cover;
+    width: auto;
+    height: 90vh;
+    padding-top: 40px;
+}
+
+.titleLoginContainer{
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.tagEsqueciSenha {
+    padding-top: 10px;
+    font-weight: bold;
+    color: #0a58ca;
+    transition: 0.5ms;
+}
+
+.tagEsqueciSenha:hover{
+    color:#0d6efd;
+    cursor: default;
+}

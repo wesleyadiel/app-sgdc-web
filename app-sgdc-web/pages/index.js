@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { useRouter } from 'next/router';
 import { ToastContainer, toast } from 'react-toastify';
+import { setCookie, parseCookies } from 'nookies';
 import Link from 'next/link';
+import { GetUserProps } from './components/Auth';
 import 'react-toastify/dist/ReactToastify.css';
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Index.module.css'
 
 export default function Home() {
   const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/login`
@@ -12,6 +14,17 @@ export default function Home() {
   const [isFormOpen, setIsFormOpen] = useState("");
   const [isLoading, setIsLoading] = useState("");
   const router = useRouter();
+  const [user, setUser] = useState(null);
+
+
+  useEffect(() => {
+    GetUserProps(router).then((e) => {
+      if (e) {
+        setUser(e);
+        router.push("/home");
+      }
+    });
+  }, []);
 
   const isValidForm = () => {
     if (!usuario) {
@@ -43,23 +56,51 @@ export default function Home() {
         body: JSON.stringify({ usuario, senha })
       });
 
-      const data = JSON.stringify(await res.json());
-      console.log(res)
+      const data = await res.json();
+
       if (res.status == 400)
         return toast.warn(data);
 
       if (res.status != 200)
         return toast.warn(data);
 
-      router.push({
-        pathname: '/home'
-      });
+      setCookie('sgdc', 'sgdc-token', data.token, { maxAge: 1800 });
+      console.log(data);
+      if (data.primeiroAcesso) {
+        router.push('/primeiroAcesso');
+        return;
+      }
+      else {
+        router.push('/home');
+        return;
+      }
 
 
     } catch (error) {
       console.log(error);
       setIsLoading(false);
     }
+  }
+
+  const getUsuarioByToken = async (token) => {
+    const res = await fetch(`${URL}/${token}`, {
+      method: 'GET',
+      headers: new Headers({
+        'Authorization': token,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
+    });
+
+    const data = JSON.stringify(await res.json());
+
+    if (res.status != 200)
+      console.log(data)
+
+    setCookie(undefined, 'sgdc-token', data.token, { maxAge: 1800 });
+
+    router.push({
+      pathname: '/home'
+    });
   }
 
   return (

@@ -1,14 +1,14 @@
+import Head from 'next/head'
+import { ToastContainer, toast } from 'react-toastify';
+
 import Navbar from './Navbar'
 import Footer from './Footer'
 import loader from './../loader'
-
-import Head from 'next/head'
 
 export default function Layout({ children }) {
     return (
         <>
             <Head>
-                s<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
                 <link rel="shorcut icon" href="/images/favicon.ico" />
                 <title>UTFPR - SGDC</title>
 
@@ -18,9 +18,22 @@ export default function Layout({ children }) {
             </Head>
             <Navbar />
             <main className="main-container">
-                {children}
+                    {children}
             </main>
             <Footer />
+
+            
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark" />
         </>
     )
 }
