@@ -27,13 +27,15 @@ export default function Usuarios() {
         GetUserProps(router).then(async (e) => {
             if (e) {
                 setUser(e);
-                console.log(router)
-                console.log(router.query)
+                if(!router.query.id)
+                    return
+
+                await editarUsuario(router.query.id);
             }
         });
     }, []);
 
-    const editarUsuario = async () => {
+    const editarUsuario = async (id) => {
         const { 'sgdc-token': token } = parseCookies();
         const res = await fetch(`${URL}/${id}`, {
             method: "GET",
@@ -68,7 +70,6 @@ export default function Usuarios() {
 
     const salvarUsuario = async (e) => {
         e.preventDefault();
-        console.log('salvou');
 
         if (!nome)
             return toast.warn("Nome não informado.");
@@ -119,24 +120,23 @@ export default function Usuarios() {
                                 <div className="row">
                                     <div className="col-md-8">
                                         <div className="form-group">
-                                            <label for="nomeInput">Nome</label>
+                                            <label htmlFor="nomeInput">Nome</label>
                                             <input type="text" className="form-control" id="nomeInput" aria-describedby="nomeHelp" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} />
                                             <small id="nomeHelp" className="form-text text-muted">Novos usuários serão cadastrados com a senha UTFPR123.</small>
                                         </div>
                                     </div>
                                     <div className="col-md-4">
                                         <div className="form-group">
-                                            <label for="usuarioInput">Usuário</label>
+                                            <label htmlFor="usuarioInput">Usuário</label>
                                             <input type="text" className="form-control" id="usuarioInput" placeholder="Usuário" value={usuario} onChange={(e) => setUsuario(e.target.value)} />
                                         </div>
                                     </div>
                                 </div>
-                                &nbsp;
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <label for="selectTipo">Tipo de usuário</label>
+                                        <label htmlFor="selectTipo">Tipo de usuário</label>
                                         <select className="form-control" id="selectTipo" value={tipo} onChange={(e) => setTipo(e.target.value)}>
-                                            <option value="" selected>Selecione...</option>
+                                            <option value="">Selecione...</option>
                                             <option value="P">Padrão</option>
                                             <option value="A">Administrador</option>
                                         </select>

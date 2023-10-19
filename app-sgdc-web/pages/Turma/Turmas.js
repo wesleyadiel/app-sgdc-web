@@ -1,23 +1,22 @@
 import { useState, useEffect, createContext } from "react";
 import { useRouter } from 'next/router';
-import { ToastContainer, toast } from 'react-toastify';
-import { setCookie, parseCookies } from 'nookies';
+import { toast } from 'react-toastify';
+import { parseCookies } from 'nookies';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { GetUserProps } from './components/Auth';
+import { GetUserProps } from '../components/Auth';
 
-import Link from 'next/link';
-import styles from '../styles/Usuarios.module.css'
-import Sidebar from "./components/Sidebar"
+import styles from '../../styles/Turmas.module.css'
+import Sidebar from "../components/Sidebar"
 import 'react-toastify/dist/ReactToastify.css';
 
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
-export default function Usuarios() {
-    const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/usuarios`
-    const URL_ACOES = `${process.env.NEXT_PUBLIC_URL_BASE_API}/usuario`
-    const [usuarios, setUsuarios] = useState([]);
+export default function Turmas() {
+    const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/turmas`
+    const URL_ACOES = `${process.env.NEXT_PUBLIC_URL_BASE_API}/turma`
+    const [turmas, setTurmas] = useState([]);
     const router = useRouter();
     const [user, setUser] = useState({});
 
@@ -25,12 +24,12 @@ export default function Usuarios() {
         GetUserProps(router).then(async (e) => {
             if (e) {
                 setUser(e);
-                setUsuarios(await buscarUsuarios());
+                setTurmas(await buscarTurmas());
             }
         });
     }, []);
 
-    const buscarUsuarios = async () => {
+    const buscarTurmas = async () => {
         const { 'sgdc-token': token } = parseCookies();
         const res = await fetch(URL, {
             method: "GET",
@@ -49,36 +48,35 @@ export default function Usuarios() {
         return data;
     }
 
-    const editarUsuario = async (idUsuario) => {
-        if (!idUsuario)
-            return toast.warn("IdUsuario inválido.");
+    const editarTurma = async (idTurma) => {
+        if (!idTurma)
+            return toast.warn("IdTurma inválido.");
 
-        router.push(`/usuariosCadastro?id=${idUsuario}`);
+        router.push(`/Turma/TurmaCadastro?id=${idTurma}`);
     }
 
-    const cadastrarNovoUsuario = async () => {
-        router.push(`/usuariosCadastro`);
+    const cadastrarNovaTurma = async () => {
+        router.push(`/Turma/TurmaCadastro`);
     }
 
-    const excluirUsuario = async (nome, idUsuario) => {
-        if (!idUsuario)
-            return toast.warn("IdUsuario inválido.");
+    const excluirTurma = async (turma, curso, idTurma) => {
+        if (!idTurma)
+            return toast.warn("IdTurma inválido.");
 
         confirmAlert({
-            title: 'Excluir usuário',
-            message: `Tem certeza que deseja excluir o usuário ${nome}`,
+            title: 'Excluir turma',
+            message: `Tem certeza que deseja excluir a turma ${turma} - ${curso}`,
             buttons: [
                 {
                     label: 'Sim',
                     onClick: async () => {
                         const { 'sgdc-token': token } = parseCookies();
-                        const res = await fetch(`${URL_ACOES}/${idUsuario}`, {
+                        const res = await fetch(`${URL_ACOES}/${idTurma}`, {
                             method: "DELETE",
                             headers: new Headers({
                                 'Authorization': token,
                                 'Content-Type': 'application/json'
-                            }),
-                            body: JSON.stringify({ id:idUsuario })
+                            })
                         })
 
                         const data = await res.json();
@@ -87,7 +85,7 @@ export default function Usuarios() {
                         }
 
                         toast.success(data);
-                        router.reload();
+                        router.reload("/Turma/Turmas");
                         return;
                     }
                 },
@@ -99,25 +97,41 @@ export default function Usuarios() {
     }
 
     const renderRows = () => {
-        if (usuarios.length == 0) {
-            return <tr><td className="aviso_nenhum_dado" colSpan="4"><b>Nenhum usuário encontrado.</b></td></tr>
+        if (turmas.length == 0) {
+            return <tr><td className="aviso_nenhum_dado" colSpan="4"><b>Nenhuma turma encontrada.</b></td></tr>
         }
 
-        return usuarios.map((u) => {
+        return turmas.map((u) => {
             return (<tr>
                 <td className="text">
                     {u.nome}
                 </td>
                 <td>
-                    {u.usuario}
+                    {u.nomecurso}
                 </td>
                 <td>
-                    {u.tipo == 'P' ? 'Usuário' : 'Administrador'}
+                    {u.datainicio}
+                </td>
+                <td>
+                    {u.datafim}
+                </td>
+                <td>
+                    {u.planilha}
+                </td>
+                <td>
+                    {u.solicitacaoabertura}
+                </td>
+                <td>
+                    {u.nomecoordenador}
+                </td>
+                
+                <td>
+                    {u.nomesecretario}
                 </td>
                 <td className="text-center">
-                    <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarUsuario(u.idusuario)} />
+                    <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarTurma(u.idturma)} />
                     &nbsp;&nbsp; &#124; &nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirUsuario(u.nome, u.idusuario)} />
+                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirTurma(u.nome, u.nomecurso, u.idturma)} />
                 </td>
             </tr>)
         });
@@ -131,16 +145,21 @@ export default function Usuarios() {
                     <div className="page">
                         <div className={styles.content_page}>
                             <div className={styles.title_page}>
-                                <h1>Usuários</h1>
+                                <h1>Turmas</h1>
                             </div>
                             <div className="card">
-                                <div className="table-responsive">
+                                <div className="table-responsive" style={{overflowx: 'auto'}}>
                                     <table className="table table-active table-striped">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Nome</th>
-                                                <th scope="col">Usuário</th>
-                                                <th scope="col" style={{ width: '150px' }}>Tipo</th>
+                                                <th scope="col">Curso</th>
+                                                <th scope="col">Data início</th>
+                                                <th scope="col">Data fim</th>
+                                                <th scope="col">Planilha</th>
+                                                <th scope="col">Solc. de abertura</th>
+                                                <th scope="col">Coordenador</th>
+                                                <th scope="col">Secretário</th>
                                                 <th scope="col" style={{ width: '100px' }}>Ações</th>
                                             </tr>
                                         </thead>
@@ -151,7 +170,7 @@ export default function Usuarios() {
                                 </div>
                             </div>
                             <div className={styles.footer_content}>
-                                <button type="button" className="btn btn-primary" onClick={cadastrarNovoUsuario}>Cadastrar</button>
+                                <button type="button" className="btn btn-primary" onClick={cadastrarNovaTurma}>Cadastrar</button>
                             </div>
                         </div>
                     </div>

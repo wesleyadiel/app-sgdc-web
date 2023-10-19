@@ -23,7 +23,7 @@ export default function Sidebar({user}) {
                         <FontAwesomeIcon icon={faUsers} style={{ fontSize: '24px' }} />
                         <a>Usuarios</a>
                     </li>
-                    <li>
+                    <li onClick={() => visualizarPagina("/Turma/Turmas")}>
                         <FontAwesomeIcon icon={faChalkboardUser} style={{ fontSize: '24px' }} />
                         <a>Turmas</a>
                     </li>
