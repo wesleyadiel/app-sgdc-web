@@ -27,7 +27,7 @@ export default function Sidebar({user}) {
                         <FontAwesomeIcon icon={faChalkboardUser} style={{ fontSize: '24px' }} />
                         <a>Turmas</a>
                     </li>
-                    <li>
+                    <li onClick={() => visualizarPagina("/Curso/Cursos")}>
                         <FontAwesomeIcon icon={faGraduationCap} style={{ fontSize: '24px' }}/>
                         <a>Cursos</a>
                     </li>

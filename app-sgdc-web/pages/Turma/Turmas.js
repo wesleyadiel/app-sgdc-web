@@ -85,7 +85,8 @@ export default function Turmas() {
                         }
 
                         toast.success(data);
-                        router.reload("/Turma/Turmas");
+                        setTurmas(turmas.filter((t) => t.idturma != idTurma));
+                        //router.reload("/Turma/Turmas");
                         return;
                     }
                 },

@@ -1,23 +1,23 @@
 import { useState, useEffect, createContext } from "react";
 import { useRouter } from 'next/router';
-import { ToastContainer, toast } from 'react-toastify';
-import { setCookie, parseCookies } from 'nookies';
+import { toast } from 'react-toastify';
+import { parseCookies } from 'nookies';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { GetUserProps } from './components/Auth';
+import { GetUserProps } from '../components/Auth';
+import Link from 'next/link'
 
-import Link from 'next/link';
-import styles from '../styles/Usuarios.module.css'
-import Sidebar from "./components/Sidebar"
+import styles from '../../styles/Cursos.module.css'
+import Sidebar from "../components/Sidebar"
 import 'react-toastify/dist/ReactToastify.css';
 
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
-export default function Usuarios() {
-    const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/usuarios`
-    const URL_ACOES = `${process.env.NEXT_PUBLIC_URL_BASE_API}/usuario`
-    const [usuarios, setUsuarios] = useState([]);
+export default function Cursos() {
+    const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/cursos`
+    const URL_ACOES = `${process.env.NEXT_PUBLIC_URL_BASE_API}/curso`
+    const [cursos, setCursos] = useState([]);
     const router = useRouter();
     const [user, setUser] = useState({});
 
@@ -25,12 +25,12 @@ export default function Usuarios() {
         GetUserProps(router).then(async (e) => {
             if (e) {
                 setUser(e);
-                setUsuarios(await buscarUsuarios());
+                setCursos(await buscarCursos());
             }
         });
     }, []);
 
-    const buscarUsuarios = async () => {
+    const buscarCursos = async () => {
         const { 'sgdc-token': token } = parseCookies();
         const res = await fetch(URL, {
             method: "GET",
@@ -49,36 +49,35 @@ export default function Usuarios() {
         return data;
     }
 
-    const editarUsuario = async (idUsuario) => {
-        if (!idUsuario)
-            return toast.warn("IdUsuario inválido.");
+    const editarCurso = async (idCurso) => {
+        if (!idCurso)
+            return toast.warn("IdCurso inválido.");
 
-        router.push(`/usuariosCadastro?id=${idUsuario}`);
+        router.push(`/Curso/CursoCadastro?id=${idCurso}`);
     }
 
-    const cadastrarNovoUsuario = async () => {
-        router.push(`/usuariosCadastro`);
+    const cadastrarNovoCurso = async () => {
+        router.push(`/Curso/CursoCadastro`);
     }
 
-    const excluirUsuario = async (nome, idUsuario) => {
-        if (!idUsuario)
-            return toast.warn("IdUsuario inválido.");
+    const excluirCurso = async (curso, idCurso) => {
+        if (!idCurso)
+            return toast.warn("IdCurso inválido.");
 
         confirmAlert({
-            title: 'Excluir usuário',
-            message: `Tem certeza que deseja excluir o usuário ${nome}`,
+            title: 'Excluir curso',
+            message: `Tem certeza que deseja excluir o curso ${curso}`,
             buttons: [
                 {
                     label: 'Sim',
                     onClick: async () => {
                         const { 'sgdc-token': token } = parseCookies();
-                        const res = await fetch(`${URL_ACOES}/${idUsuario}`, {
+                        const res = await fetch(`${URL_ACOES}/${idCurso}`, {
                             method: "DELETE",
                             headers: new Headers({
                                 'Authorization': token,
                                 'Content-Type': 'application/json'
-                            }),
-                            body: JSON.stringify({ id:idUsuario })
+                            })
                         })
 
                         const data = await res.json();
@@ -87,7 +86,7 @@ export default function Usuarios() {
                         }
 
                         toast.success(data);
-                        setUsuarios(usuarios.filter((u) => u.idusuario != idUsuario));
+                        setCursos(cursos.filter((c) => c.idcurso != idCurso));
                         return;
                     }
                 },
@@ -99,25 +98,43 @@ export default function Usuarios() {
     }
 
     const renderRows = () => {
-        if (usuarios.length == 0) {
-            return <tr><td className="aviso_nenhum_dado" colSpan="4"><b>Nenhum usuário encontrado.</b></td></tr>
+        if (cursos.length == 0) {
+            return <tr><td className="aviso_nenhum_dado" colSpan="4"><b>Nenhum curso encontrado.</b></td></tr>
         }
 
-        return usuarios.map((u) => {
+        return cursos.map((c) => {
             return (<tr>
                 <td className="text">
-                    {u.nome}
+                    {c.nome}
                 </td>
                 <td>
-                    {u.usuario}
+                    {c.periodo}
                 </td>
                 <td>
-                    {u.tipo == 'P' ? 'Usuário' : 'Administrador'}
+                    {c.cargahoraria}
+                </td>
+                <td>
+                    <Link href={c.projetopedagogico} target="_blank">
+                        Link
+                    </Link>
+                </td>
+                <td>
+                    <Link href={c.aprovacaocogep} target="_blank">
+                        Link
+                    </Link>
+                </td>
+                <td>
+                    <Link href={c.atacolegiado} target="_blank">
+                        Link
+                    </Link>
+                </td>
+                <td>
+                    {c.nomecoordenador}
                 </td>
                 <td className="text-center">
-                    <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarUsuario(u.idusuario)} />
+                    <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarCurso(c.idcurso)} />
                     &nbsp;&nbsp; &#124; &nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirUsuario(u.nome, u.idusuario)} />
+                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirCurso(c.nome, c.idcurso)} />
                 </td>
             </tr>)
         });
@@ -131,16 +148,20 @@ export default function Usuarios() {
                     <div className="page">
                         <div className={styles.content_page}>
                             <div className={styles.title_page}>
-                                <h1>Usuários</h1>
+                                <h1>Cursos</h1>
                             </div>
                             <div className="card">
-                                <div className="table-responsive">
+                                <div className="table-responsive" style={{ overflowx: 'auto' }}>
                                     <table className="table table-active table-striped">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Nome</th>
-                                                <th scope="col">Usuário</th>
-                                                <th scope="col" style={{ width: '150px' }}>Tipo</th>
+                                                <th scope="col">Periodo</th>
+                                                <th scope="col">Carga horária</th>
+                                                <th scope="col">Projeto pedagógico</th>
+                                                <th scope="col">Aprovação COGEP</th>
+                                                <th scope="col">Ata colegiado</th>
+                                                <th scope="col">Coordenador</th>
                                                 <th scope="col" style={{ width: '100px' }}>Ações</th>
                                             </tr>
                                         </thead>
@@ -151,7 +172,7 @@ export default function Usuarios() {
                                 </div>
                             </div>
                             <div className={styles.footer_content}>
-                                <button type="button" className="btn btn-primary" onClick={cadastrarNovoUsuario}>Cadastrar</button>
+                                <button type="button" className="btn btn-primary" onClick={cadastrarNovoCurso}>Cadastrar</button>
                             </div>
                         </div>
                     </div>
