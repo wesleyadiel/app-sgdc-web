@@ -3,14 +3,13 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { parseCookies } from 'nookies';
 import { GetUserProps } from '../components/Auth';
-import { ConvertDateForInput, ConvertStringDateToDateForInput } from '../components/ServicesAux';
 
 import $ from "jquery"
 import styles from '../../styles/CursoCadastro.module.css'
 import Sidebar from "../components/Sidebar"
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Usuarios() {
+export default function CursoCadastro() {
     const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/curso`
     const URL_USUARIO = `${process.env.NEXT_PUBLIC_URL_BASE_API}/usuarios`
     const [id, setId] = useState(0);
@@ -194,7 +193,7 @@ export default function Usuarios() {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <label htmlFor="inputProjetoPedagogico">Projeto pedagógicoo</label>
-                                            <input type="text" className="form-control" id="inputProjetoPedagogico" placeholder="Link do projeto pedagógico" value={projetoPedagogico} onChange={(e) => setProjetoPedagogicoo(e.target.value)} />
+                                            <input type="url" className="form-control" id="inputProjetoPedagogico" placeholder="Link do projeto pedagógico" value={projetoPedagogico} onChange={(e) => setProjetoPedagogicoo(e.target.value)} />
                                         </div>
                                     </div>
                                 </div>
@@ -202,7 +201,7 @@ export default function Usuarios() {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <label htmlFor="inputAprovacaoCogep">Aprovação COGEP</label>
-                                            <input type="text" className="form-control" id="inputAprovacaoCogep" placeholder="Link da aprovação COGEP" value={aprovacaoCogep} onChange={(e) => setAprovacaoCogep(e.target.value)} />
+                                            <input type="url" className="form-control" id="inputAprovacaoCogep" placeholder="Link da aprovação COGEP" value={aprovacaoCogep} onChange={(e) => setAprovacaoCogep(e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="col-md-6">

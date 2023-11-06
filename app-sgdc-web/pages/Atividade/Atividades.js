@@ -5,19 +5,20 @@ import { parseCookies } from 'nookies';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { GetUserProps } from '../components/Auth';
-import Link from 'next/link'
+import { getStatusAtividade } from '../components/ServicesAux';
+import Link from 'next/link';
 
-import styles from '../../styles/Cursos.module.css'
+import styles from '../../styles/Atividades.module.css'
 import Sidebar from "../components/Sidebar"
 import 'react-toastify/dist/ReactToastify.css';
 
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
-export default function Cursos() {
-    const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/cursos`
-    const URL_ACOES = `${process.env.NEXT_PUBLIC_URL_BASE_API}/curso`
-    const [cursos, setCursos] = useState([]);
+export default function Atividades() {
+    const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/atividades`
+    const URL_ACOES = `${process.env.NEXT_PUBLIC_URL_BASE_API}/atividade`
+    const [atividades, setAtividades] = useState([]);
     const router = useRouter();
     const [user, setUser] = useState({});
 
@@ -25,12 +26,12 @@ export default function Cursos() {
         GetUserProps(router).then(async (e) => {
             if (e) {
                 setUser(e);
-                setCursos(await buscarCursos());
+                setAtividades(await buscarAtividades());
             }
         });
     }, []);
 
-    const buscarCursos = async () => {
+    const buscarAtividades = async () => {
         const { 'sgdc-token': token } = parseCookies();
         const res = await fetch(URL, {
             method: "GET",
@@ -49,30 +50,30 @@ export default function Cursos() {
         return data;
     }
 
-    const editarCurso = async (idCurso) => {
-        if (!idCurso)
-            return toast.warn("IdCurso inválido.");
+    const editarAtividade = async (idAtividade) => {
+        if (!idAtividade)
+            return toast.warn("IdAtividade inválida.");
 
-        router.push(`/Curso/CursoCadastro?id=${idCurso}`);
+        router.push(`/Atividade/AtividadeCadastro?id=${idAtividade}`);
     }
 
-    const cadastrarNovoCurso = async () => {
-        router.push(`/Curso/CursoCadastro`);
+    const cadastrarNovaAtividade = async () => {
+        router.push(`/Atividade/AtividadeCadastro`);
     }
 
-    const excluirCurso = async (curso, idCurso) => {
-        if (!idCurso)
-            return toast.warn("IdCurso inválido.");
+    const excluirAtividade = async (atividade, idAtividade) => {
+        if (!idAtividade)
+            return toast.warn("IdAtividade inválida.");
 
         confirmAlert({
-            title: 'Excluir curso',
-            message: `Tem certeza que deseja excluir o curso ${curso}`,
+            title: 'Excluir atividade',
+            message: `Tem certeza que deseja excluir a Atividade ${atividade}`,
             buttons: [
                 {
                     label: 'Sim',
                     onClick: async () => {
                         const { 'sgdc-token': token } = parseCookies();
-                        const res = await fetch(`${URL_ACOES}/${idCurso}`, {
+                        const res = await fetch(`${URL_ACOES}/${idAtividade}`, {
                             method: "DELETE",
                             headers: new Headers({
                                 'Authorization': token,
@@ -86,7 +87,8 @@ export default function Cursos() {
                         }
 
                         toast.success(data);
-                        setCursos(cursos.filter((c) => c.idcurso != idCurso));
+                        setAtividades(atividades.filter((a) => a.idatividade != idAtividade));
+
                         return;
                     }
                 },
@@ -97,44 +99,34 @@ export default function Cursos() {
         });
     }
 
+    
+
     const renderRows = () => {
-        if (cursos.length == 0) {
-            return <tr><td className="aviso_nenhum_dado" colSpan="8"><b>Nenhum curso encontrado.</b></td></tr>
+        if (atividades.length == 0) {
+            return <tr><td className="aviso_nenhum_dado" colSpan="6"><b>Nenhuma atividade encontrada.</b></td></tr>
         }
 
-        return cursos.map((c) => {
+        return atividades.map((a) => {
             return (<tr>
                 <td className="text">
-                    {c.nome}
+                    {a.descricao}
                 </td>
                 <td>
-                    {c.periodo}
+                    {a.turmanome}
                 </td>
                 <td>
-                    {c.cargahoraria}
+                    {a.datainicio}
                 </td>
                 <td>
-                    <Link href={c.projetopedagogico} target="_blank">
-                        Link
-                    </Link>
+                    {a.datafim}
                 </td>
                 <td>
-                    <Link href={c.aprovacaocogep} target="_blank">
-                        Link
-                    </Link>
-                </td>
-                <td>
-                    <Link href={c.atacolegiado} target="_blank">
-                        Link
-                    </Link>
-                </td>
-                <td>
-                    {c.nomecoordenador}
+                    {getStatusAtividade(a.status)}
                 </td>
                 <td className="text-center">
-                    <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarCurso(c.idcurso)} />
+                    <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarAtividade(a.idatividade)} />
                     &nbsp;&nbsp; &#124; &nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirCurso(c.nome, c.idcurso)} />
+                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirAtividade(a.descricao, a.idatividade)} />
                 </td>
             </tr>)
         });
@@ -148,20 +140,18 @@ export default function Cursos() {
                     <div className="page">
                         <div className={styles.content_page}>
                             <div className={styles.title_page}>
-                                <h1>Cursos</h1>
+                                <h1>Atividades</h1>
                             </div>
                             <div className="card">
                                 <div className="table-responsive" style={{ overflowx: 'auto' }}>
                                     <table className="table table-active table-striped">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Nome</th>
-                                                <th scope="col">Periodo</th>
-                                                <th scope="col">Carga horária</th>
-                                                <th scope="col">Projeto pedagógico</th>
-                                                <th scope="col">Aprovação COGEP</th>
-                                                <th scope="col">Ata colegiado</th>
-                                                <th scope="col">Coordenador</th>
+                                                <th scope="col">Descrição</th>
+                                                <th scope="col">Turma</th>
+                                                <th scope="col">Data início</th>
+                                                <th scope="col">Data fim</th>
+                                                <th scope="col">Status</th>
                                                 <th scope="col" style={{ width: '100px' }}>Ações</th>
                                             </tr>
                                         </thead>
@@ -172,7 +162,7 @@ export default function Cursos() {
                                 </div>
                             </div>
                             <div className={styles.footer_content}>
-                                <button type="button" className="btn btn-primary" onClick={cadastrarNovoCurso}>Cadastrar</button>
+                                <button type="button" className="btn btn-primary" onClick={cadastrarNovaAtividade}>Cadastrar</button>
                             </div>
                         </div>
                     </div>

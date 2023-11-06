@@ -5,6 +5,7 @@ import { parseCookies } from 'nookies';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { GetUserProps } from '../components/Auth';
+import Link from 'next/link';
 
 import styles from '../../styles/Turmas.module.css'
 import Sidebar from "../components/Sidebar"
@@ -99,7 +100,7 @@ export default function Turmas() {
 
     const renderRows = () => {
         if (turmas.length == 0) {
-            return <tr><td className="aviso_nenhum_dado" colSpan="4"><b>Nenhuma turma encontrada.</b></td></tr>
+            return <tr><td className="aviso_nenhum_dado" colSpan="9"><b>Nenhuma turma encontrada.</b></td></tr>
         }
 
         return turmas.map((u) => {
@@ -117,15 +118,19 @@ export default function Turmas() {
                     {u.datafim}
                 </td>
                 <td>
-                    {u.planilha}
+                    <Link href={u.planilha} target="_blank">
+                        Link
+                    </Link>
                 </td>
                 <td>
-                    {u.solicitacaoabertura}
+                    <Link href={u.solicitacaoabertura} target="_blank">
+                        Link
+                    </Link>
                 </td>
                 <td>
                     {u.nomecoordenador}
                 </td>
-                
+
                 <td>
                     {u.nomesecretario}
                 </td>
@@ -149,7 +154,7 @@ export default function Turmas() {
                                 <h1>Turmas</h1>
                             </div>
                             <div className="card">
-                                <div className="table-responsive" style={{overflowx: 'auto'}}>
+                                <div className="table-responsive" style={{ overflowx: 'auto' }}>
                                     <table className="table table-active table-striped">
                                         <thead>
                                             <tr>
@@ -158,7 +163,7 @@ export default function Turmas() {
                                                 <th scope="col">Data início</th>
                                                 <th scope="col">Data fim</th>
                                                 <th scope="col">Planilha</th>
-                                                <th scope="col">Solc. de abertura</th>
+                                                <th scope="col">Solic. de abertura</th>
                                                 <th scope="col">Coordenador</th>
                                                 <th scope="col">Secretário</th>
                                                 <th scope="col" style={{ width: '100px' }}>Ações</th>

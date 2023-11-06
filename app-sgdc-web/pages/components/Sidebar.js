@@ -31,11 +31,11 @@ export default function Sidebar({user}) {
                         <FontAwesomeIcon icon={faGraduationCap} style={{ fontSize: '24px' }}/>
                         <a>Cursos</a>
                     </li>
-                    <li>
+                    <li onClick={() => visualizarPagina("/Documento/Documentos")}>
                         <FontAwesomeIcon icon={faFolderOpen} style={{ fontSize: '24px' }}/>
                         <a>Documentos</a>
                     </li>
-                    <li>
+                    <li onClick={() => visualizarPagina("/Atividade/Atividades")}>
                         <FontAwesomeIcon icon={faBookOpen} style={{ fontSize: '24px' }} />
                         <a>Atividades</a>
                     </li>

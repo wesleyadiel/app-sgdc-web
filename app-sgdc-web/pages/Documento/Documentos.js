@@ -5,19 +5,20 @@ import { parseCookies } from 'nookies';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { GetUserProps } from '../components/Auth';
-import Link from 'next/link'
+import { getTipoDocumento } from '../components/ServicesAux';
+import Link from 'next/link';
 
-import styles from '../../styles/Cursos.module.css'
+import styles from '../../styles/Documentos.module.css'
 import Sidebar from "../components/Sidebar"
 import 'react-toastify/dist/ReactToastify.css';
 
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
-export default function Cursos() {
-    const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/cursos`
-    const URL_ACOES = `${process.env.NEXT_PUBLIC_URL_BASE_API}/curso`
-    const [cursos, setCursos] = useState([]);
+export default function Documentos() {
+    const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/documentos`
+    const URL_ACOES = `${process.env.NEXT_PUBLIC_URL_BASE_API}/documento`
+    const [documentos, setDocumentos] = useState([]);
     const router = useRouter();
     const [user, setUser] = useState({});
 
@@ -25,12 +26,12 @@ export default function Cursos() {
         GetUserProps(router).then(async (e) => {
             if (e) {
                 setUser(e);
-                setCursos(await buscarCursos());
+                setDocumentos(await buscarDocumentos());
             }
         });
     }, []);
 
-    const buscarCursos = async () => {
+    const buscarDocumentos = async () => {
         const { 'sgdc-token': token } = parseCookies();
         const res = await fetch(URL, {
             method: "GET",
@@ -49,30 +50,30 @@ export default function Cursos() {
         return data;
     }
 
-    const editarCurso = async (idCurso) => {
-        if (!idCurso)
-            return toast.warn("IdCurso inválido.");
+    const editarDocumento = async (idDocumento) => {
+        if (!idDocumento)
+            return toast.warn("IdDocumento inválido.");
 
-        router.push(`/Curso/CursoCadastro?id=${idCurso}`);
+        router.push(`/Documento/DocumentoCadastro?id=${idDocumento}`);
     }
 
-    const cadastrarNovoCurso = async () => {
-        router.push(`/Curso/CursoCadastro`);
+    const cadastrarNovoDocumento = async () => {
+        router.push(`/Documento/DocumentoCadastro`);
     }
 
-    const excluirCurso = async (curso, idCurso) => {
-        if (!idCurso)
-            return toast.warn("IdCurso inválido.");
+    const excluirDocumento = async (documento, turma, idDocumento) => {
+        if (!idDocumento)
+            return toast.warn("IdDocumento inválido.");
 
         confirmAlert({
-            title: 'Excluir curso',
-            message: `Tem certeza que deseja excluir o curso ${curso}`,
+            title: 'Excluir documento',
+            message: `Tem certeza que deseja excluir o documento ${documento} - ${turma}`,
             buttons: [
                 {
                     label: 'Sim',
                     onClick: async () => {
                         const { 'sgdc-token': token } = parseCookies();
-                        const res = await fetch(`${URL_ACOES}/${idCurso}`, {
+                        const res = await fetch(`${URL_ACOES}/${idDocumento}`, {
                             method: "DELETE",
                             headers: new Headers({
                                 'Authorization': token,
@@ -86,7 +87,8 @@ export default function Cursos() {
                         }
 
                         toast.success(data);
-                        setCursos(cursos.filter((c) => c.idcurso != idCurso));
+                        setDocumentos(documentos.filter((d) => d.iddocumento != idDocumento));
+
                         return;
                     }
                 },
@@ -97,44 +99,36 @@ export default function Cursos() {
         });
     }
 
+    
+
     const renderRows = () => {
-        if (cursos.length == 0) {
-            return <tr><td className="aviso_nenhum_dado" colSpan="8"><b>Nenhum curso encontrado.</b></td></tr>
+        if (documentos.length == 0) {
+            return <tr><td className="aviso_nenhum_dado" colSpan="6"><b>Nenhum documento encontrado.</b></td></tr>
         }
 
-        return cursos.map((c) => {
+        return documentos.map((d) => {
             return (<tr>
                 <td className="text">
-                    {c.nome}
+                    {d.descricao}
                 </td>
                 <td>
-                    {c.periodo}
+                    {getTipoDocumento(d.tipo)}
                 </td>
                 <td>
-                    {c.cargahoraria}
+                    {d.data}
                 </td>
                 <td>
-                    <Link href={c.projetopedagogico} target="_blank">
+                    {d.turmanome}
+                </td>
+                <td>
+                    <Link href={d.link} target="_blank">
                         Link
                     </Link>
-                </td>
-                <td>
-                    <Link href={c.aprovacaocogep} target="_blank">
-                        Link
-                    </Link>
-                </td>
-                <td>
-                    <Link href={c.atacolegiado} target="_blank">
-                        Link
-                    </Link>
-                </td>
-                <td>
-                    {c.nomecoordenador}
                 </td>
                 <td className="text-center">
-                    <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarCurso(c.idcurso)} />
+                    <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarDocumento(d.iddocumento)} />
                     &nbsp;&nbsp; &#124; &nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirCurso(c.nome, c.idcurso)} />
+                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirDocumento(d.descricao, d.turmanome, d.iddocumento)} />
                 </td>
             </tr>)
         });
@@ -148,20 +142,18 @@ export default function Cursos() {
                     <div className="page">
                         <div className={styles.content_page}>
                             <div className={styles.title_page}>
-                                <h1>Cursos</h1>
+                                <h1>Documentos</h1>
                             </div>
                             <div className="card">
                                 <div className="table-responsive" style={{ overflowx: 'auto' }}>
                                     <table className="table table-active table-striped">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Nome</th>
-                                                <th scope="col">Periodo</th>
-                                                <th scope="col">Carga horária</th>
-                                                <th scope="col">Projeto pedagógico</th>
-                                                <th scope="col">Aprovação COGEP</th>
-                                                <th scope="col">Ata colegiado</th>
-                                                <th scope="col">Coordenador</th>
+                                                <th scope="col">Descrição</th>
+                                                <th scope="col">Tipo</th>
+                                                <th scope="col">Data</th>
+                                                <th scope="col">Turma</th>
+                                                <th scope="col">Link</th>
                                                 <th scope="col" style={{ width: '100px' }}>Ações</th>
                                             </tr>
                                         </thead>
@@ -172,7 +164,7 @@ export default function Cursos() {
                                 </div>
                             </div>
                             <div className={styles.footer_content}>
-                                <button type="button" className="btn btn-primary" onClick={cadastrarNovoCurso}>Cadastrar</button>
+                                <button type="button" className="btn btn-primary" onClick={cadastrarNovoDocumento}>Cadastrar</button>
                             </div>
                         </div>
                     </div>
