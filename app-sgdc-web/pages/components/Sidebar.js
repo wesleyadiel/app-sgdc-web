@@ -39,7 +39,7 @@ export default function Sidebar({user}) {
                         <FontAwesomeIcon icon={faBookOpen} style={{ fontSize: '24px' }} />
                         <a>Atividades</a>
                     </li>
-                    <li>
+                    <li onClick={() => visualizarPagina("/Pendencia/Pendencias")}>
                         <FontAwesomeIcon icon={faTriangleExclamation} style={{ fontSize: '24px' }} />
                         <a>Pendências</a>
                     </li>

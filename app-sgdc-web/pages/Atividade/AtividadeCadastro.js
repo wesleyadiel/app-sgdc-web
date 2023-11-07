@@ -20,6 +20,7 @@ export default function AtividadeCadastro() {
     const URL = `${process.env.NEXT_PUBLIC_URL_BASE_API}/atividade`
     const URL_TURMAS = `${process.env.NEXT_PUBLIC_URL_BASE_API}/turmas`
     const URL_USUARIOS = `${process.env.NEXT_PUBLIC_URL_BASE_API}/usuarios`
+    const [returnPage, setReturnPage] = useState(false);
     const [id, setId] = useState(0);
     const [idTurma, setIdTurma] = useState(0);
     const [idUsuario, setIdUsuario] = useState(0);
@@ -48,6 +49,9 @@ export default function AtividadeCadastro() {
                     return
 
                 await editarAtividade(router.query.id);
+
+                if (!returnPage && router.query.returnPage)
+                    setReturnPage(true);
             }
         });
     }, []);
@@ -78,14 +82,17 @@ export default function AtividadeCadastro() {
         setDataFim(ConvertStringDateToDateForInput(data.datafim));
         setStatus(data.status);
 
-        if(data.usuariosRelacionados)
+        if (data.usuariosRelacionados)
             setUsuariosRelacionados(data.usuariosRelacionados);
 
         return data;
     }
 
     const cancelar = async () => {
-        router.push("/Atividade/Atividades");
+        if (returnPage)
+            router.back();
+        else
+            router.push("/Atividade/Atividades");
     }
 
     const salvar = async (e) => {
@@ -116,6 +123,9 @@ export default function AtividadeCadastro() {
         if (!dataFim)
             return toast.warn("Data de fim não informada.");
 
+        if (!status)
+            return toast.warn("Status não informado.");
+
         if (usuariosRelacionados.length <= 0)
             return toast.warn("Nenhum responsável informado.");
 
@@ -136,7 +146,10 @@ export default function AtividadeCadastro() {
             }
 
             toast.success(data);
-            router.push("/Atividade/Atividades");
+            if (returnPage)
+                router.back();
+            else
+                router.push("/Atividade/Atividades");
         } catch (error) {
             return toast.error(error);
         }
