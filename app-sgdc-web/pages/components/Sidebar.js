@@ -3,17 +3,27 @@ import { faCircleUser, faUsers, faChalkboardUser,faGraduationCap, faFolderOpen, 
 import { useRouter } from 'next/router';
 
 import styles from '../../styles/Sidebar.module.css'
+import { useState, useEffect, createContext } from "react";
 
 export default function Sidebar({user}) {
+    const [isAdmin, setIsAdmin] = useState(false);
     const router = useRouter();
+
+    useEffect(() => {
+            setIsAdmin(user.tipo == "A");
+    }, []);
     
     async  function  visualizarPagina(rota) {
         router.push(rota);
     }
 
+    const editarCadastro = () => {
+        router.push(`/usuariosCadastro?id=${user.idusuario}&returnPage=home`);
+    }
+
     return (
         <div className={styles.sidebar_container}>
-            <div className={styles.header_sidebar}>
+            <div className={styles.header_sidebar} onClick={()=> editarCadastro()}>
                 <FontAwesomeIcon icon={faCircleUser} style={{ fontSize: '35px', color: "#ffffff" }} />
                 <a>{user.nome?.slice(0, 12)}</a>
             </div>

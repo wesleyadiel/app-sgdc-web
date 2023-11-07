@@ -131,7 +131,7 @@ export default function Cursos() {
                 <td>
                     {c.nomecoordenador}
                 </td>
-                <td className="text-center">
+                <td className={user.tipo != "A" ? "hide_div" : "text-center"}>
                     <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarCurso(c.idcurso)} />
                     &nbsp;&nbsp; &#124; &nbsp;&nbsp;
                     <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirCurso(c.nome, c.idcurso)} />
@@ -162,7 +162,7 @@ export default function Cursos() {
                                                 <th scope="col">Aprovação COGEP</th>
                                                 <th scope="col">Ata colegiado</th>
                                                 <th scope="col">Coordenador</th>
-                                                <th scope="col" style={{ width: '100px' }}>Ações</th>
+                                                <th className={user.tipo != "A" ? "hide_div" : "text-center"} scope="col" style={{ width: '100px' }}>Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -171,8 +171,10 @@ export default function Cursos() {
                                     </table>
                                 </div>
                             </div>
-                            <div className={styles.footer_content}>
-                                <button type="button" className="btn btn-primary" onClick={cadastrarNovoCurso}>Cadastrar</button>
+                            <div className={user.tipo != "A" ? "hide_div" : "text-center"}>
+                                <div className={styles.footer_content}>
+                                    <button type="button" className="btn btn-primary" onClick={cadastrarNovoCurso}>Cadastrar</button>
+                                </div>
                             </div>
                         </div>
                     </div>

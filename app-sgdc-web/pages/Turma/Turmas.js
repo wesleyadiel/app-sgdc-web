@@ -134,7 +134,7 @@ export default function Turmas() {
                 <td>
                     {u.nomesecretario}
                 </td>
-                <td className="text-center">
+                <td className={user.tipo != "A" ? "hide_div" : "text-center"}>
                     <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarTurma(u.idturma)} />
                     &nbsp;&nbsp; &#124; &nbsp;&nbsp;
                     <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirTurma(u.nome, u.nomecurso, u.idturma)} />
@@ -166,7 +166,7 @@ export default function Turmas() {
                                                 <th scope="col">Solic. de abertura</th>
                                                 <th scope="col">Coordenador</th>
                                                 <th scope="col">Secretário</th>
-                                                <th scope="col" style={{ width: '100px' }}>Ações</th>
+                                                <th className={user.tipo != "A" ? "hide_div" : "text-center"} scope="col" style={{ width: '100px' }}>Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -175,8 +175,10 @@ export default function Turmas() {
                                     </table>
                                 </div>
                             </div>
-                            <div className={styles.footer_content}>
-                                <button type="button" className="btn btn-primary" onClick={cadastrarNovaTurma}>Cadastrar</button>
+                            <div className={user.tipo != "A" ? "hide_div" : "text-center"}>
+                                <div className={styles.footer_content}>
+                                    <button type="button" className="btn btn-primary" onClick={cadastrarNovaTurma}>Cadastrar</button>
+                                </div>
                             </div>
                         </div>
                     </div>

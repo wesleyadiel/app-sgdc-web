@@ -78,7 +78,7 @@ export default function Usuarios() {
                                 'Authorization': token,
                                 'Content-Type': 'application/json'
                             }),
-                            body: JSON.stringify({ id:idUsuario })
+                            body: JSON.stringify({ id: idUsuario })
                         })
 
                         const data = await res.json();
@@ -112,12 +112,14 @@ export default function Usuarios() {
                     {u.usuario}
                 </td>
                 <td>
-                    {u.tipo == 'P' ? 'Usuário' : 'Administrador'}
+                    {u.tipo == 'P' ? 'Padrão' : 'Administrador'}
                 </td>
-                <td className="text-center">
-                    <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarUsuario(u.idusuario)} />
-                    &nbsp;&nbsp; &#124; &nbsp;&nbsp;
-                    <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirUsuario(u.nome, u.idusuario)} />
+                <td className={user.tipo != "A" ? "hide_div" : "text-center"}>
+                    <div >
+                        <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarUsuario(u.idusuario)} />
+                        &nbsp;&nbsp; &#124; &nbsp;&nbsp;
+                        <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirUsuario(u.nome, u.idusuario)} />
+                    </div>
                 </td>
             </tr>)
         });
@@ -141,7 +143,7 @@ export default function Usuarios() {
                                                 <th scope="col">Nome</th>
                                                 <th scope="col">Usuário</th>
                                                 <th scope="col" style={{ width: '150px' }}>Tipo</th>
-                                                <th scope="col" style={{ width: '100px' }}>Ações</th>
+                                                <th className={user.tipo != "A" ? "hide_div" : "text-center"} scope="col" style={{ width: '100px' }}>Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -150,8 +152,10 @@ export default function Usuarios() {
                                     </table>
                                 </div>
                             </div>
-                            <div className={styles.footer_content}>
-                                <button type="button" className="btn btn-primary" onClick={cadastrarNovoUsuario}>Cadastrar</button>
+                            <div className={user.tipo != "A" ? "hide_div" : "text-center"}>
+                                <div className={styles.footer_content}>
+                                    <button type="button" className="btn btn-primary" onClick={cadastrarNovoUsuario}>Cadastrar</button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -36,6 +36,7 @@ export default function AtividadeCadastro() {
     const [usuarios, setUsuarios] = useState([]);
     const [usuariosRelacionados, setUsuariosRelacionados] = useState([]);
     const [idResponsavelSelecionado, setIdResponsavelSelecionado] = useState(0);
+    const [edicaoTotal, setEdicaoTotal] = useState(false);
 
     useEffect(() => {
         GetUserProps(router).then(async (e) => {
@@ -48,7 +49,7 @@ export default function AtividadeCadastro() {
                 if (!router.query.id)
                     return
 
-                await editarAtividade(router.query.id);
+                await editarAtividade(router.query.id, e);
 
                 if (!returnPage && router.query.returnPage)
                     setReturnPage(true);
@@ -56,7 +57,7 @@ export default function AtividadeCadastro() {
         });
     }, []);
 
-    const editarAtividade = async (id) => {
+    const editarAtividade = async (id, userEdicao) => {
         const { 'sgdc-token': token } = parseCookies();
         const res = await fetch(`${URL}/${id}`, {
             method: "GET",
@@ -84,6 +85,11 @@ export default function AtividadeCadastro() {
 
         if (data.usuariosRelacionados)
             setUsuariosRelacionados(data.usuariosRelacionados);
+
+            console.log(userEdicao.tipo == "A" || data.idusuario == userEdicao.idusuario);
+            console.log(userEdicao.tipo, data.idusuario, userEdicao.idusuario)
+        if(!edicaoTotal && (userEdicao.tipo == "A" || data.idusuario == userEdicao.idusuario))
+            setEdicaoTotal(true);
 
         return data;
     }
@@ -239,7 +245,7 @@ export default function AtividadeCadastro() {
                 <td className="text">
                     {a.nome}
                 </td>
-                <td className="text-center">
+                <td className={!edicaoTotal? "hide_div" : "text-center"}>
                     <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => removerResponsavel(a.idusuario)} />
                 </td>
             </tr>)
@@ -261,7 +267,7 @@ export default function AtividadeCadastro() {
                                     <div className="col-md-10">
                                         <div className="form-group">
                                             <label htmlFor="descricaoInput">Descrição</label>
-                                            <input type="text" className="form-control" id="descricaoInput" aria-describedby="descricaoHelp" placeholder="Descrição" value={descricao} onChange={(e) => setDescricao(e.target.value)} />
+                                            <input disabled={!edicaoTotal} type="text" className="form-control" id="descricaoInput" aria-describedby="descricaoHelp" placeholder="Descrição" value={descricao} onChange={(e) => setDescricao(e.target.value)} />
                                         </div>
                                     </div>
 
@@ -278,7 +284,7 @@ export default function AtividadeCadastro() {
                                 <div className="row">
                                     <div className="col-md-6">
                                         <label htmlFor="selectTurma">Turma</label>
-                                        <select className="form-control" id="selectCoordenador" value={idTurma} onChange={(e) => setIdTurma(e.target.value)}>
+                                        <select disabled={!edicaoTotal}  className="form-control" id="selectCoordenador" value={idTurma} onChange={(e) => setIdTurma(e.target.value)}>
                                             <option value="0">Selecione...</option>
                                             {renderOptionsTurmas()}
                                         </select>
@@ -286,13 +292,13 @@ export default function AtividadeCadastro() {
                                     <div className="col-md-3">
                                         <div className="form-group">
                                             <label htmlFor="inputDataInicio">Data de início</label>
-                                            <input type="date" className="form-control" id="inputDataInicio" placeholder="Data de início" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
+                                            <input disabled={!edicaoTotal} type="date" className="form-control" id="inputDataInicio" placeholder="Data de início" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
                                         </div>
                                     </div>
                                     <div className="col-md-3">
                                         <div className="form-group">
                                             <label htmlFor="inputDataFim">Data de fim</label>
-                                            <input type="date" className="form-control" id="inputDataFim" placeholder="Data de fim" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
+                                            <input disabled={!edicaoTotal} type="date" className="form-control" id="inputDataFim" placeholder="Data de fim" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
                                         </div>
                                     </div>
                                 </div>
@@ -321,7 +327,7 @@ export default function AtividadeCadastro() {
                                                             <thead>
                                                                 <tr>
                                                                     <th scope="col">Responsáveis</th>
-                                                                    <th scope="col" style={{ width: '10px' }}></th>
+                                                                    <th className={!edicaoTotal? "hide_div" : "text-center"} scope="col" style={{ width: '10px' }}></th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -335,14 +341,14 @@ export default function AtividadeCadastro() {
                                         <div className={styles.slc_resp}>
                                             <div className="row">
                                                 <div className="col-md-9">
-                                                    <select className="form-control" id="selectResponsavel" value={idResponsavelSelecionado} onChange={(e) => setIdResponsavelSelecionado(e.target.value)}>
+                                                    <select disabled={!edicaoTotal}  className="form-control" id="selectResponsavel" value={idResponsavelSelecionado} onChange={(e) => setIdResponsavelSelecionado(e.target.value)}>
                                                         <option value="0">Selecione...</option>
                                                         {renderOptionsUsuarios()}
                                                     </select>
                                                 </div>
                                                 <div className="col-md-3">
                                                     <div className={styles.slc_resp_button}>
-                                                        <button type="button" className="btn btn-secondary" onClick={adicionarResponsavel}>Incluir</button>
+                                                        <button disabled={!edicaoTotal}  type="button" className="btn btn-secondary" onClick={adicionarResponsavel}>Incluir</button>
                                                     </div>
                                                 </div>
                                             </div>

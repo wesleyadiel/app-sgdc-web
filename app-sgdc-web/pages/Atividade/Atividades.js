@@ -99,7 +99,7 @@ export default function Atividades() {
         });
     }
 
-    
+
 
     const renderRows = () => {
         if (atividades.length == 0) {
@@ -123,7 +123,7 @@ export default function Atividades() {
                 <td>
                     {getStatusAtividade(a.status)}
                 </td>
-                <td className="text-center">
+                <td className={user.tipo != "A" ? "hide_div" : "text-center"}>
                     <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarAtividade(a.idatividade)} />
                     &nbsp;&nbsp; &#124; &nbsp;&nbsp;
                     <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirAtividade(a.descricao, a.idatividade)} />
@@ -152,7 +152,7 @@ export default function Atividades() {
                                                 <th scope="col">Data início</th>
                                                 <th scope="col">Data fim</th>
                                                 <th scope="col">Status</th>
-                                                <th scope="col" style={{ width: '100px' }}>Ações</th>
+                                                <th className={user.tipo != "A" ? "hide_div" : "text-center"} scope="col" style={{ width: '100px' }}>Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -161,8 +161,10 @@ export default function Atividades() {
                                     </table>
                                 </div>
                             </div>
-                            <div className={styles.footer_content}>
-                                <button type="button" className="btn btn-primary" onClick={cadastrarNovaAtividade}>Cadastrar</button>
+                            <div className={user.tipo != "A" ? "hide_div" : "text-center"}>
+                                <div className={styles.footer_content}>
+                                    <button type="button" className="btn btn-primary" onClick={cadastrarNovaAtividade}>Cadastrar</button>
+                                </div>
                             </div>
                         </div>
                     </div>

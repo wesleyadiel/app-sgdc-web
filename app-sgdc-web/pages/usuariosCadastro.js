@@ -22,13 +22,17 @@ export default function Usuarios() {
     const [editando, setEditando] = useState(false);
     const router = useRouter();
     const [user, setUser] = useState({});
+    const [returnPage, setReturnPage] = useState(false);
 
     useEffect(() => {
         GetUserProps(router).then(async (e) => {
             if (e) {
                 setUser(e);
-                if(!router.query.id)
+                if (!router.query.id)
                     return
+
+                if (!returnPage && router.query.returnPage)
+                    setReturnPage(true)
 
                 await editarUsuario(router.query.id);
             }
@@ -60,7 +64,10 @@ export default function Usuarios() {
     }
 
     const cancelar = async () => {
-        router.push("/usuarios");
+        if (returnPage)
+            router.back();
+        else
+            router.push("/usuarios");
     }
 
     const salvar = async (e) => {
@@ -100,7 +107,10 @@ export default function Usuarios() {
             }
 
             toast.success(data);
-            router.push("/usuarios");
+            if (returnPage)
+                router.back();
+            else
+                router.push("/usuarios");
         } catch (error) {
             return toast.error(error);
         }
@@ -135,7 +145,7 @@ export default function Usuarios() {
                                 <div className="row">
                                     <div className="col-md-6">
                                         <label htmlFor="selectTipo">Tipo de usuário</label>
-                                        <select className="form-control" id="selectTipo" value={tipo} onChange={(e) => setTipo(e.target.value)}>
+                                        <select disabled={user.tipo != "A"} className="form-control" id="selectTipo" value={tipo} onChange={(e) => setTipo(e.target.value)}>
                                             <option value="">Selecione...</option>
                                             <option value="P">Padrão</option>
                                             <option value="A">Administrador</option>

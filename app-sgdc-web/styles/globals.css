@@ -44,3 +44,7 @@ h1, .h1 {
 .row{
     margin-bottom: 15px;
 }
+
+.hide_div{
+    display: none;
+}

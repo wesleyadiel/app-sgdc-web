@@ -30,6 +30,22 @@ async function GetUserProps(router) {
     }
 }
 
+async function ValidUser(router){
+    try {
+        const { 'sgdc-token': token } = parseCookies();
+        if (!token) {
+            router.push("/");
+            return false;
+        }
+        
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}
+
 module.exports = {
-    GetUserProps
+    GetUserProps,
+    ValidUser
 }

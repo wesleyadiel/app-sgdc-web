@@ -99,7 +99,7 @@ export default function Documentos() {
         });
     }
 
-    
+
 
     const renderRows = () => {
         if (documentos.length == 0) {
@@ -125,7 +125,7 @@ export default function Documentos() {
                         Link
                     </Link>
                 </td>
-                <td className="text-center">
+                <td className={user.tipo != "A" ? "hide_div" : "text-center"}>
                     <FontAwesomeIcon icon={faPenToSquare} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => editarDocumento(d.iddocumento)} />
                     &nbsp;&nbsp; &#124; &nbsp;&nbsp;
                     <FontAwesomeIcon icon={faTrash} style={{ fontSize: '16px', cursor: 'pointer' }} onClick={() => excluirDocumento(d.descricao, d.turmanome, d.iddocumento)} />
@@ -154,7 +154,7 @@ export default function Documentos() {
                                                 <th scope="col">Data</th>
                                                 <th scope="col">Turma</th>
                                                 <th scope="col">Link</th>
-                                                <th scope="col" style={{ width: '100px' }}>Ações</th>
+                                                <th className={user.tipo != "A" ? "hide_div" : "text-center"} scope="col" style={{ width: '100px' }}>Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -163,8 +163,10 @@ export default function Documentos() {
                                     </table>
                                 </div>
                             </div>
-                            <div className={styles.footer_content}>
-                                <button type="button" className="btn btn-primary" onClick={cadastrarNovoDocumento}>Cadastrar</button>
+                            <div className={user.tipo != "A" ? "hide_div" : "text-center"}>
+                                <div className={styles.footer_content}>
+                                    <button type="button" className="btn btn-primary" onClick={cadastrarNovoDocumento}>Cadastrar</button>
+                                </div>
                             </div>
                         </div>
                     </div>

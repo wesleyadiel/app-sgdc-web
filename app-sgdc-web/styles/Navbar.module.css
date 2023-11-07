@@ -1,25 +1,30 @@
-.navbar{
+.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1em 1.2em;
     background-color: #403D38;
-    color:#fff;
+    color: #fff;
 }
 
-.logo{
+.logo {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.logo h1{
+.logo img:hover {
+    cursor: pointer;
+}
+
+.logo h1 {
     margin-left: 1em;
 }
 
 .link_items {
     display: flex;
     list-style: none;
+    padding-top: 15px;
 }
 
 .link_items li {
@@ -35,5 +40,5 @@
 }
 
 .link_items a:hover {
-    border-color:#f8f7f3;
+    border-color: #f8f7f3;
 }
